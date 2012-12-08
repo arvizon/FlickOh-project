@@ -1,6 +1,5 @@
 """
 INFO 290 - FlickOh Project
-Usage
 """
 
 import codecs
@@ -19,7 +18,7 @@ class Sentiment():
     
     @staticmethod
     def get_sentiment(filename):
-        """ Get sentiment analysis of tweets in the specified file
+        """ Get sentiment polarity of tweets in the specified file.
 
         This function utilizes the sentiment140 API.
 
@@ -123,20 +122,29 @@ class Sentiment():
         ntweet['id'] = data['id']
         ntweet['text'] = newtext
         ntweet['query'] = cls.movie.get_title(int(data['no']))
-        ntweet['user'] = data['user']['screen_name']
+        if (type(data['user']) == type('')):
+            ntweet['user'] = data['user']
+        else if (type(data['user']) == type({})):
+            ntweet['user'] = data['user']['screen_name']
         ntweet['created_at'] = data['created_at']
-        ntweet['retweet_count'] = data['retweet_count']
+        if ('retweet_count' in data):
+            ntweet['retweet_count'] = data['retweet_count']
+        if ('retweeted' in data):
+            ntweet['retweeted'] = data['retweeted']
 
         return (json.dumps(ntweet), data['text'], data['id'])
 
     @staticmethod
-    def process_sentiment(directory, include_tweets=False):
-        """Summarize the sentiment polarity for each movie from the files in the
-        specified directory.
+    def summarize_sentiment_dir(directory, include_tweets=False):
+        """Compute summary statistics of the sentiment polarity of each movie
+        from all the files in the specified directory.
 
         This method will process all the files with extension .json
         in the given directory and will count the total number of tweets
         with negative, neutral, positive sentiments for each movie.
+
+        If include_tweets is true, then it will also write files with
+        relevant tweets for each movie.
         """
         movie = Movie()
         NUM_MOVIES = movie.get_num_movies()
@@ -148,10 +156,7 @@ class Sentiment():
 
             polarity_level = {0:"negative", 2:"neutral", 4:"positive"}
 
-            for item in data:
-                # "Mon Oct 29 06:15:21 +0000 2012"
-                #time_ = time.strptime(item['created_at'],
-                #                     "%a %b %d %I:%M:%S %z %Y")                
+            for item in data:               
                 polarity[item['no']][item['polarity']//2] += 1
                 texts[item['no']][polarity_level[item['polarity']]] += [{"text":item['text']}]
                                 
@@ -177,7 +182,7 @@ class Sentiment():
 
         if (not include_tweets): return
         for i in range(0, NUM_MOVIES):            
-            fw = open('sentiment_texts_' + str(i) + '.json', 'w')
+            fw = open('tweets_' + str(i) + '.json', 'w')
             fw.write(json.dumps(stm_texts[i], indent=4))
             fw.close()        
 
