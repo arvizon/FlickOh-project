@@ -1,5 +1,6 @@
 """
 INFO 290 - FlickOh Project
+Author: Natth
 """
 
 import codecs

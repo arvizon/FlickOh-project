@@ -1,6 +1,7 @@
 #!/usr/bin/python
 """
 INFO 290 - FlickOh Project
+Author: Natth
 Sample Usage: python partition_file.py 2000000 'tweets_file'
 """
 

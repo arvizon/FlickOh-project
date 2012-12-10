@@ -1,7 +1,7 @@
 #!/usr/bin/env python # encoding: utf-8
 """
 INFO 290 - FlickOh Project
-
+Author: Natth
 Usage: python collect_tweets.py 'users_file'
 """
 
