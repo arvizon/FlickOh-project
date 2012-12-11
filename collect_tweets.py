@@ -71,6 +71,7 @@ def collect_tweets(users_file):
         
     users_f.close()
     logfile.close()
+    
 
 def combine_files(directory, nodelist_file):
     """ Combine files of statuses in the specified directory into
